@@ -1,0 +1,28 @@
+[global]
+workgroup = WORKGROUP
+server role = standalone server
+security = user
+passdb backend = tdbsam
+vfs objects = acl_xattr default_quota aio_pthread catia fruit
+server min protocol = SMB2
+server max protocol = SMB3
+map to guest = Bad User
+
+{% for share in [
+  {"name": "test1", "path": "/Pool01/test1"},
+  {"name": "test2", "path": "/Pool01/test2"},
+  {"name": "test3", "path": "/Pool01/test3"},
+] %}
+[{{ share.name }}]
+path = {{ share.path }}
+read only = no
+guest only = no
+guest ok = no
+printable = no
+browseable = yes
+valid users = test
+force user = test
+force create mode = 0666
+force directory mode = 0777
+
+{% endfor %}
