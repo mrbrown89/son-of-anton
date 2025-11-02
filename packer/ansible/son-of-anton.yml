@@ -1,0 +1,48 @@
+---
+- name: Bootstrap son-of-anton on Debian
+  hosts: all
+  become: true
+  vars:
+    repo_url: "https://github.com/mrbrown89/son-of-anton.git"
+    repo_branch: "main"
+    repo_dest: "/opt/son-of-anton"
+    bootstrap_script: "/opt/son-of-anton/bootStrap/bootStrap.sh"
+    bootstrap_marker: "/opt/son-of-anton/.bootstrap_done"
+
+  tasks:
+    - name: Ensure git is installed
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Ensure /opt exists
+      ansible.builtin.file:
+        path: /opt
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Clone son-of-anton repo
+      ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ repo_dest }}"
+        version: "{{ repo_branch }}"
+        force: yes
+        update: yes
+
+    - name: Make bootstrap script executable
+      ansible.builtin.file:
+        path: "{{ bootstrap_script }}"
+        mode: "0755"
+      when: bootstrap_script is file
+
+    - name: Run bootstrap (once)
+      ansible.builtin.shell: |
+        set -euo pipefail
+        "{{ bootstrap_script }}"
+        touch "{{ bootstrap_marker }}"
+      args:
+        chdir: "{{ repo_dest }}"
+        creates: "{{ bootstrap_marker }}"

@@ -3,6 +3,8 @@
 Son of Anton is a collection of [SaltStack](https://saltproject.io/) states and scripts for automating ZFS storage builds.  
 It sets up a ZFS filesystem, creates datasets, and shares them out with samba and NFS making it easy to spin up a reproducible storage lab. Why Son of Anton? Check out the wiki page.
 
+If you're using Parallels on macOS there is a Packer build that will automate the build by using a golden image. See the wiki for help.
+
 ## Quickstart
 
 1. Download an ISO from Debian and build a VM
