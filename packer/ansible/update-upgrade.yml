@@ -1,0 +1,22 @@
+---
+- name: Update and Upgrade Linux
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Update apt package cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Upgrade all packages to latest version
+      ansible.builtin.apt:
+        upgrade: dist
+
+    - name: Autoremove unnecessary packages
+      ansible.builtin.apt:
+        autoremove: yes
+
+    - name: Autoclean apt cache
+      ansible.builtin.apt:
+        autoclean: yes

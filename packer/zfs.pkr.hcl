@@ -88,7 +88,13 @@ build {
   ]
 }
 
-  # Son of Ansible playbooks
+  # Son of Anton Ansible playbooks
+  # Update and Upgrade the VM
+  provisioner "ansible" {
+    playbook_file   = "ansible/update-upgrade.yml"
+    user            = "debian"
+}
+
   # Clone Anton Repo
   provisioner "ansible" {
     playbook_file   = "ansible/son-of-anton.yml"
