@@ -10,7 +10,7 @@ packer {
 # -------- Variables (top-level only) --------
 variable "username" {
   type    = string
-  default = "put your username here"
+  default = "matt"
 }
 
 variable "local_user" {

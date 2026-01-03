@@ -1,5 +1,7 @@
 # Welcome to Son of Anton!
 
+![CI Status](https://img.shields.io/badge/CI-passing-brightgreen?style=flat-square)
+
 Son of Anton is a collection of [SaltStack](https://saltproject.io/) states and scripts for automating ZFS storage builds.  
 It sets up a ZFS filesystem, creates datasets, and shares them out with samba and NFS making it easy to spin up a reproducible storage lab. Why Son of Anton? Check out the wiki page.
 
