@@ -19,7 +19,7 @@ saltInstall() {
     apt-get update
     cat >/etc/apt/preferences.d/salt-pin-1001 <<'EOF'
 Package: salt-*
-Pin: version 3006.*
+Pin: version 3007.*
 Pin-Priority: 1001
 EOF
 
