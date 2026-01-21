@@ -7,10 +7,19 @@ packer {
   }
 }
 
+packer {
+  required_plugins {
+    ansible = {
+      version = "~> 1"
+      source  = "github.com/hashicorp/ansible"
+    }
+  }
+}
+
 # -------- Variables (top-level only) --------
 variable "username" {
   type    = string
-  default = "matt"
+  default = "mattb"
 }
 
 variable "local_user" {
