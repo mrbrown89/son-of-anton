@@ -13,7 +13,7 @@
         {{ e.path }} {{ e.clients }}({{ e.options }}{% if e.get('fsid') is not none %},fsid={{ e.fsid }}{% endif %})
         {% endfor %}
     - watch_in:
-      - module: nfs_export_apply
+      - cmd: nfs_export_apply
 
 nfs_export_apply:
   cmd.run:
