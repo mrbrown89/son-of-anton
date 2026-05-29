@@ -1,6 +1,6 @@
 base:
   '*':
-    - zfs.dataSets
+    - zfs
     - nfs.nfsPackages
     - nfs.exports
     - samba.smbPackages
