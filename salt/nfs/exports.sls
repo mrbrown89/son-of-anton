@@ -16,6 +16,7 @@
       - module: nfs_export_apply
 
 nfs_export_apply:
-  module.run:
-    - name: nfs3.exportfs
-    - refresh: True
+  cmd.run:
+    - name: exportfs -ar
+    - onchanges:
+      - file: /etc/exports
