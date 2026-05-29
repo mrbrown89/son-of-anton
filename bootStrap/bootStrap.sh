@@ -161,16 +161,6 @@ main() {
     baseSoftware
     saltInstall
     diskMappings
-
-    echo "Installing ZFS"
-    salt '*' state.apply zfs.zfs test=false
-
-    echo "Building ZFS Pool"
-    salt '*' state.apply zfs.pool test=false
-
-    echo "Pool Information"
-    zpool list
-
     echo "Running full salt build"
     salt '*' state.apply test=false
 }
