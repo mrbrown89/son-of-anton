@@ -13,7 +13,7 @@ If you're using Parallels on macOS there is a Packer build that will automate th
 2. Attach two 5GB and two 10GB virtual disks
 3. Boot up and create your VM.
 4. `cd` into `/opt` and clone this repo to `/opt`
-5. `cd` into `/opt/mustyStor/bootStrap` and `chmod +x` the `bootStrap.sh` script
+5. `cd` into `/opt/son-of-anton/bootStrap` and `chmod +x` the `bootStrap.sh` script
 6. Run the script
 7. Once complete you have a working ZFS build with 3 datasets and 3 shares! You can access the SMB shares with the user `test` and password `test`.
 
