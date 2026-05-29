@@ -1,8 +1,7 @@
 base:
   '*':
     - zfs
-    - nfs.nfsPackages
-    - nfs.exports
+    - nfs
     - samba.smbPackages
     - samba.init
     - samba.user
