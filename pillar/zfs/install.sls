@@ -12,8 +12,5 @@ zfs:
       arm64: linux-headers-arm64
       aarch64: linux-headers-arm64
 
-  apt:
-    refresh_window_minutes: 60
-
   zed:
     enabled: true

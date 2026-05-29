@@ -1,16 +1,12 @@
-{# zfs/init.sls - Debian (arm64 & amd64) without duplicate repos #}
+{% set zfs = pillar.get('zfs', {}) %}
+{% set repo = zfs.get('repo', {}) %}
+{% set kernel = zfs.get('kernel', {}) %}
+
 {% set arch = grains['osarch'] %}
-{% set codename = grains.get('oscodename', 'stable') %}
+{% set codename = repo.get('codename', grains.get('oscodename', 'stable')) %}
+{% set components = repo.get('components', ['contrib', 'non-free-firmware']) %}
+{% set hdr_pkg = kernel.get('headers_map', {}).get(arch, 'linux-headers-' ~ grains['kernelrelease']) %}
 
-{% if arch in ['x86_64', 'amd64'] %}
-  {% set hdr_pkg = 'linux-headers-amd64' %}
-{% elif arch in ['aarch64', 'arm64'] %}
-  {% set hdr_pkg = 'linux-headers-arm64' %}
-{% else %}
-  {% set hdr_pkg = 'linux-headers-' ~ grains['kernelrelease'] %}
-{% endif %}
-
-# Ensure time sync (prevents "signature not live until..." apt errors)
 timesyncd-service:
   service.running:
     - name: systemd-timesyncd
@@ -23,27 +19,23 @@ timesyncd-ntp-on:
     - require:
       - service: timesyncd-service
 
-# Provide contrib + non-free-firmware ONLY (no 'main') to avoid duplicates
-/etc/apt/sources.list.d/zfs-debian-extras.list:
+zfs-repo:
   file.managed:
+    - name: /etc/apt/sources.list.d/zfs-debian-extras.list
     - mode: "0644"
-    - user: root
-    - group: root
     - contents: |
-        deb http://deb.debian.org/debian {{ codename }} contrib non-free-firmware
-        deb http://deb.debian.org/debian {{ codename }}-updates contrib non-free-firmware
-        deb http://security.debian.org/debian-security {{ codename }}-security contrib non-free-firmware
+        deb http://deb.debian.org/debian {{ codename }} {{ components | join(' ') }}
+        deb http://deb.debian.org/debian {{ codename }}-updates {{ components | join(' ') }}
+        deb http://security.debian.org/debian-security {{ codename }}-security {{ components | join(' ') }}
 
-# Refresh apt (skip if lists are fresh)
 apt-update:
   cmd.run:
     - name: apt-get update
     - unless: test -n "$(find /var/lib/apt/lists -type f -name '*Packages*' -mmin -60 2>/dev/null)"
     - require:
-      - file: /etc/apt/sources.list.d/zfs-debian-extras.list
+      - file: zfs-repo
       - cmd: timesyncd-ntp-on
 
-# Build toolchain + headers (by arch)
 zfs-build-deps:
   pkg.installed:
     - pkgs:
@@ -56,7 +48,6 @@ zfs-build-deps:
         attempts: 2
         interval: 5
 
-# ZFS DKMS + userspace
 zfs-packages:
   pkg.installed:
     - pkgs:
@@ -68,7 +59,6 @@ zfs-packages:
         attempts: 2
         interval: 5
 
-# Load module now (idempotent)
 modprobe-zfs:
   cmd.run:
     - name: /sbin/modprobe zfs
@@ -76,20 +66,18 @@ modprobe-zfs:
     - require:
       - pkg: zfs-packages
 
-# Load at boot
-/etc/modules-load.d/zfs.conf:
+zfs-module-load:
   file.managed:
+    - name: /etc/modules-load.d/zfs.conf
     - contents: "zfs\n"
     - mode: "0644"
-    - user: root
-    - group: root
     - require:
       - pkg: zfs-packages
 
-# ZFS event daemon
 zfs-zed:
   service.running:
-    - enable: True
+    - name: zed
+    - enable: {{ zfs.get('zed', {}).get('enabled', True) }}
     - require:
       - cmd: modprobe-zfs
       - pkg: zfs-packages

@@ -1,5 +1,5 @@
 include:
-  - zfs.zfs
+  - zfs.install
   - zfs.pool
   - zfs.metaDisks
   - 
