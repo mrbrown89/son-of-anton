@@ -69,7 +69,7 @@ EOF
 
     # Ensure ::1 line exists and includes our hostnames
     if grep -q '^::1' /etc/hosts; then
-        grep -qE "^::1 .*\\b${F}\\b" /etc/hosts || sed -i "s/^::1.*/& ${F} ${H}/"
+        grep -qE "^::1 .*\\b${F}\\b" /etc/hosts || sed -i "s/^::1.*/& ${F} ${H}/" /etc/hosts
     else
         printf "::1 localhost ip6-localhost ip6-loopback %s %s\n" "$F" "$H" >>/etc/hosts
     fi
