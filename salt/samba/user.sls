@@ -15,7 +15,7 @@ samba_password_{{ username }}:
     - name: >
         (printf "{{ config['password'] }}\n{{ config['password'] }}\n" |
         smbpasswd -s -a {{ username }})
-    - unless: pdbedit -L | grep -q "^{{ username }}$"
+    - unless: "pdbedit -L | grep -q '^{{ username }}:'"
     - require:
       - user: samba_user_{{ username }}
 
