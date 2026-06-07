@@ -1,12 +1,15 @@
-{% set datasets = [
-  'Pool01/test1',
-  'Pool01/test2',
-  'Pool01/test3'
-] %}
+{% set zfs = pillar.get('zfs', {}) %}
+{% set datasets = zfs.get('datasets', {}) %}
 
-{% for ds in datasets %}
-create_{{ ds.replace('/', '_') }}:
+{% for pool, ds_list in datasets.items() %}
+
+  {% for ds in ds_list %}
+
+ensure_{{ pool }}_{{ ds }}:
   cmd.run:
-    - name: zfs create {{ ds }}
-    - unless: zfs list -H -o name {{ ds }}
+    - name: zfs create {{ pool }}/{{ ds }}
+    - unless: zfs list -H -o name {{ pool }}/{{ ds }}
+
+  {% endfor %}
+
 {% endfor %}
